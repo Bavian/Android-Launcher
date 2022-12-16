@@ -12,8 +12,13 @@ class AppsCollectorImpl(private val packageManager: PackageManager) : AppsCollec
 
     override fun collectApps(): List<AppData> = packageManager
         .queryIntentActivitiesCompat(launcherIntent)
-        .map { AppData(it.loadLabel(packageManager), it.activityInfo.packageName) }
+        .map(::toAppData)
 
+    private fun toAppData(resolveInfo: ResolveInfo) = AppData(
+        resolveInfo.loadLabel(packageManager),
+        resolveInfo.activityInfo.packageName,
+        resolveInfo.loadIcon(packageManager),
+    )
 }
 
 @Suppress("DEPRECATION")
