@@ -1,3 +1,9 @@
 package com.bavian.androidlauncher.apps
 
-data class AppData(val label: CharSequence, val packageName: CharSequence)
+import android.graphics.drawable.Drawable
+
+data class AppData(
+    val label: CharSequence,
+    val packageName: CharSequence,
+    val icon: Drawable,
+)
