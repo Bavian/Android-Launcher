@@ -6,7 +6,6 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -17,6 +16,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,31 +26,36 @@ import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.view.WindowCompat
 import com.bavian.androidlauncher.apps.AppData
-import com.bavian.androidlauncher.apps.AppsCollector
-import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LauncherActivity : ComponentActivity() {
 
-    private val appsCollector: AppsCollector by inject()
+    private val launcherViewModel: LauncherViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, true)
         setContent {
+            val appsList by launcherViewModel.appsList.collectAsState(emptyList())
             LazyColumn(
                 contentPadding = PaddingValues(24.dp, 24.dp, 24.dp, 0.dp),
                 modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.spacedBy(24.dp)
             ) {
-                items(appsCollector.collectApps()) { LauncherButton(it) }
+                items(appsList) { LauncherButton(it) }
             }
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        launcherViewModel.onStart()
     }
 
     @Composable
     private fun LauncherButton(appData: AppData) {
         TextButton(
-            onClick = { appData.launch() },
+            onClick = { launcherViewModel.appClicked(this, appData) },
         ) {
             Icon(
                 bitmap = appData.icon.toBitmap().asImageBitmap(),
@@ -68,9 +74,4 @@ class LauncherActivity : ComponentActivity() {
             )
         }
     }
-
-    private fun AppData.launch() = startActivity(getLaunchIntent())
-
-    private fun AppData.getLaunchIntent() =
-        packageManager.getLaunchIntentForPackage(packageName.toString())
 }
