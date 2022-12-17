@@ -47,6 +47,11 @@ class LauncherActivity : ComponentActivity() {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        launcherViewModel.onStart()
+    }
+
     @Composable
     private fun LauncherButton(appData: AppData) {
         TextButton(
