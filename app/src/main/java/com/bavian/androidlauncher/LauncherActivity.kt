@@ -36,12 +36,14 @@ class LauncherActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, true)
         setContent {
-            val appsList by launcherViewModel.appsList.collectAsState(emptyList())
+            val gamesList by launcherViewModel.gamesList.collectAsState()
+            val appsList by launcherViewModel.appsList.collectAsState()
             LazyColumn(
                 contentPadding = PaddingValues(24.dp, 24.dp, 24.dp, 0.dp),
                 modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.spacedBy(24.dp)
             ) {
+                items(gamesList) { LauncherButton(it) }
                 items(appsList) { LauncherButton(it) }
             }
         }

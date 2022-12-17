@@ -15,7 +15,10 @@ class LauncherViewModel(
     private val appsCollector: AppsCollector
 ) : ViewModel() {
 
-    private val _appsList = MutableStateFlow(appsCollector.collectApps())
+    private val _gamesList = MutableStateFlow(emptyList<AppData>())
+    val gamesList = _gamesList.asStateFlow()
+
+    private val _appsList = MutableStateFlow(emptyList<AppData>())
     val appsList = _appsList.asStateFlow()
 
     fun onStart() {
@@ -26,8 +29,9 @@ class LauncherViewModel(
         activity.startActivity(appData.getLaunchIntent())
     }
 
-    private fun refreshApps() {
-        viewModelScope.launch { _appsList.emit(appsCollector.collectApps()) }
+    private fun refreshApps() = viewModelScope.launch {
+        _gamesList.emit(appsCollector.collectGames())
+        _appsList.emit(appsCollector.collectApps())
     }
 
     private fun AppData.getLaunchIntent() =
