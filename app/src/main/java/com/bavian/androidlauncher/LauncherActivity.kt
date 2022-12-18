@@ -55,7 +55,6 @@ class LauncherActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, true)
         setContent {
-            val focusRequester = remember { FocusRequester() }
             val scope = rememberCoroutineScope()
             val gamesListState = rememberLazyListState()
             val gamesList by launcherViewModel.gamesList.collectAsState()
@@ -63,12 +62,10 @@ class LauncherActivity : ComponentActivity() {
             val choseAppState = remember { mutableStateOf(gamesList.firstOrNull()) }
             Column(modifier = Modifier
                 .fillMaxSize()
-                .focusRequester(focusRequester = focusRequester)
             ) {
                 LazyRow(
                     state = gamesListState,
                     verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.focusRequester(focusRequester = focusRequester)
                 ) {
                     itemsIndexed(gamesList) { index, item ->
                         GameIcon(scope, gamesListState, index, item, choseAppState) {
@@ -81,9 +78,6 @@ class LauncherActivity : ComponentActivity() {
 //                            launcherViewModel.appClicked(this@LauncherActivity, item)
 //                        }
 //                    }
-                }
-                LaunchedEffect(scope) {
-                    focusRequester.requestFocus()
                 }
 
                 Text(
@@ -122,10 +116,12 @@ private fun GameIcon(
     choseAppState: MutableState<AppData?>,
     onClick: () -> Unit,
 ) {
+    val focusRequester = remember { FocusRequester() }
     var size by remember { mutableStateOf(48) }
     TextButton (
         onClick = onClick,
         modifier = Modifier
+            .focusRequester(focusRequester = focusRequester)
             .onFocusChanged {
                 if (it.isFocused) {
                     size = 72
@@ -146,6 +142,11 @@ private fun GameIcon(
             tint = Color.Unspecified,
             modifier = Modifier.size(size.dp),
         )
+    }
+    if (index == 0) {
+        LaunchedEffect(scope) {
+            focusRequester.requestFocus()
+        }
     }
 }
 
