@@ -23,6 +23,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -31,6 +32,8 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
@@ -50,14 +53,18 @@ class LauncherActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, true)
         setContent {
+            val focusRequester = remember { FocusRequester() }
             val scope = rememberCoroutineScope()
             val gamesListState = rememberLazyListState()
             val gamesList by launcherViewModel.gamesList.collectAsState()
             val appsList by launcherViewModel.appsList.collectAsState()
-            Column(modifier = Modifier.fillMaxSize()) {
+            Column(modifier = Modifier
+                .fillMaxSize()
+                .focusRequester(focusRequester = focusRequester)) {
                 LazyRow(
                     state = gamesListState,
                     verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.focusRequester(focusRequester = focusRequester)
                 ) {
                     itemsIndexed(gamesList) { index, item ->
                         GameIcon(scope, gamesListState, index, item) {
@@ -70,6 +77,9 @@ class LauncherActivity : ComponentActivity() {
 //                            launcherViewModel.appClicked(this@LauncherActivity, item)
 //                        }
 //                    }
+                }
+                LaunchedEffect(scope) {
+                    focusRequester.requestFocus()
                 }
                 LazyColumn(
                     contentPadding = PaddingValues(24.dp, 24.dp, 24.dp, 0.dp),
