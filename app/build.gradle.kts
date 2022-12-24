@@ -14,7 +14,6 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
         }
@@ -47,17 +46,9 @@ android {
 }
 
 dependencies {
-    implementation("androidx.core:core-ktx:" + ProjectVersions.AndroidX.CORE_KTX)
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:" + ProjectVersions.AndroidX.LIFECYCLE_RUNTIME_KTX)
-    implementation("com.google.android.material:material:" + ProjectVersions.MATERIAL)
-
-    // Jetpack Compose
-    implementation("androidx.activity:activity-compose:" + ProjectVersions.AndroidX.Compose.ACTIVITY)
-    implementation("androidx.compose.ui:ui:" + ProjectVersions.AndroidX.Compose.UI)
-    implementation("androidx.compose.ui:ui-tooling-preview:" + ProjectVersions.AndroidX.Compose.UI_TOOLING_PREVIEW)
-    implementation("androidx.compose.material3:material3:" + ProjectVersions.AndroidX.Compose.MATERIAL3)
-    debugImplementation("androidx.compose.ui:ui-tooling:" + ProjectVersions.AndroidX.Compose.UI_TOOLING)
-
-    // DI
-    implementation("io.insert-koin:koin-android:" + ProjectVersions.KOIN)
+    implementation(Deps.AndroidX.CORE_KTX)
+    implementation(Deps.AndroidX.LIFECYCLE_RUNTIME_KTX)
+    implementation(Deps.MATERIAL)
+    implementation(Deps.KOIN)
+    implementJetpackCompose()
 }
