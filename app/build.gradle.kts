@@ -5,12 +5,12 @@ plugins {
 
 android {
     namespace = "com.bavian.androidlauncher"
-    compileSdk = 33
+    compileSdk = ProjectVersions.Sdk.COMPILE_SDK
 
     defaultConfig {
         applicationId = "com.bavian.androidlauncher"
-        minSdk = 21
-        targetSdk = 33
+        minSdk = ProjectVersions.Sdk.MIN_SDK
+        targetSdk = ProjectVersions.Sdk.TARGET_SDK
         versionCode = 1
         versionName = "1.0"
 
@@ -27,17 +27,17 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = ProjectVersions.Java.VERSION
+        targetCompatibility = ProjectVersions.Java.VERSION
     }
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = ProjectVersions.Java.JVM_TARGET
     }
     buildFeatures {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.3.2"
+        kotlinCompilerExtensionVersion = ProjectVersions.AndroidX.Compose.KOTLIN_COMPILER_EXTENSION
     }
     packagingOptions {
         resources {
@@ -47,20 +47,17 @@ android {
 }
 
 dependencies {
-    val compose_version = "1.3.2"
+    implementation("androidx.core:core-ktx:" + ProjectVersions.AndroidX.CORE_KTX)
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:" + ProjectVersions.AndroidX.LIFECYCLE_RUNTIME_KTX)
+    implementation("com.google.android.material:material:" + ProjectVersions.MATERIAL)
 
-    implementation("androidx.core:core-ktx:1.9.0")
-    implementation("com.google.android.material:material:1.7.0")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.5.1")
-    implementation("androidx.activity:activity-compose:1.6.1")
-    implementation("androidx.compose.ui:ui:$compose_version")
-    implementation("androidx.compose.ui:ui-tooling-preview:$compose_version")
-    implementation("androidx.compose.material3:material3:1.1.0-alpha03")
-    implementation("io.insert-koin:koin-android:3.3.1")
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.1.4")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.0")
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4:$compose_version")
-    debugImplementation("androidx.compose.ui:ui-tooling:$compose_version")
-    debugImplementation("androidx.compose.ui:ui-test-manifest:$compose_version")
+    // Jetpack Compose
+    implementation("androidx.activity:activity-compose:" + ProjectVersions.AndroidX.Compose.ACTIVITY)
+    implementation("androidx.compose.ui:ui:" + ProjectVersions.AndroidX.Compose.UI)
+    implementation("androidx.compose.ui:ui-tooling-preview:" + ProjectVersions.AndroidX.Compose.UI_TOOLING_PREVIEW)
+    implementation("androidx.compose.material3:material3:" + ProjectVersions.AndroidX.Compose.MATERIAL3)
+    debugImplementation("androidx.compose.ui:ui-tooling:" + ProjectVersions.AndroidX.Compose.UI_TOOLING)
+
+    // DI
+    implementation("io.insert-koin:koin-android:" + ProjectVersions.KOIN)
 }
