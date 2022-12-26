@@ -1,6 +1,7 @@
 package com.bavian.games_list
 
 import android.util.Log
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
@@ -78,7 +79,7 @@ private inline fun GameIcon(
     noinline onFocusGained: () -> Unit,
 ) {
     var focused by remember { mutableStateOf(false) }
-    val size = if (focused) focusedSize else unfocusedSize
+    val size by animateDpAsState(if (focused) focusedSize else unfocusedSize)
     TextButton(
         onClick = onClick,
         modifier = Modifier
