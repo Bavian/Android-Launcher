@@ -1,5 +1,5 @@
 plugins {
-    id("com.android.application")
+    id("com.android.library")
     kotlin("android")
 }
 
@@ -20,6 +20,19 @@ android {
                 "proguard-rules.pro"
             )
         }
+    }
+    compileOptions {
+        sourceCompatibility = ProjectVersions.Java.VERSION
+        targetCompatibility = ProjectVersions.Java.VERSION
+    }
+    kotlinOptions {
+        jvmTarget = ProjectVersions.Java.JVM_TARGET
+    }
+    buildFeatures {
+        compose = true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = ProjectVersions.AndroidX.Compose.KOTLIN_COMPILER_EXTENSION
     }
 }
 

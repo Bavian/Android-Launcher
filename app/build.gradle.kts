@@ -20,9 +20,12 @@ android {
     }
 
     buildTypes {
-        getByName("release") {
+        release {
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
     compileOptions {
@@ -51,4 +54,6 @@ dependencies {
     implementation(Deps.MATERIAL)
     implementation(Deps.KOIN)
     implementJetpackCompose()
+
+    implementation(project(":games-list"))
 }
