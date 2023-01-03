@@ -9,8 +9,6 @@ import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.Icon
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.currentRecomposeScope
@@ -24,9 +22,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.unit.Dp
+import com.bavian.ui.library.ImageButton
 import kotlinx.coroutines.launch
 
 @Composable
@@ -43,61 +41,35 @@ fun GamesList(
         modifier = Modifier
             .height(focusedSize)
             .onFocusChanged {
-                Log.d("bavavian", "$it")
+                Log.d("bavavian", "onFocusChanged: $it")
             },
         verticalAlignment = Alignment.CenterVertically,
         state = scrollState,
     ) {
         itemsIndexed(icons) { index, icon ->
-            GameIcon(
-                unfocusedSize = unfocusedSize,
-                focusedSize = focusedSize,
-                icon = icon,
-                focusRequester = focusRequesters[index],
-                onClick = { onClick(index) },
-                onFocusGained = {
-                    coroutineScope.launch {
-                        scrollState.safeScrollToItem(icons.size, index - 1)
+            var focused by remember { mutableStateOf(false) }
+            val size by animateDpAsState(if (focused) focusedSize else unfocusedSize)
+            ImageButton(
+                bitmap = icon,
+                contentDescription = null,
+                modifier = Modifier
+                    .focusRequester(focusRequesters[index])
+                    .onFocusChanged {
+                        focused = it.isFocused
+                        if (focused) {
+                            coroutineScope.launch {
+                                scrollState.safeScrollToItem(icons.size, index - 1)
+                            }
+                        }
                     }
-                }
+                    .focusable()
+                    .size(size),
+                onClick = { onClick(index) },
             )
         }
     }
     LaunchedEffect(currentRecomposeScope) {
         focusRequesters[0].requestFocus()
-    }
-}
-
-@Suppress("NOTHING_TO_INLINE")
-@Composable
-private inline fun GameIcon(
-    unfocusedSize: Dp,
-    focusedSize: Dp,
-    icon: ImageBitmap,
-    focusRequester: FocusRequester,
-    noinline onClick: () -> Unit,
-    noinline onFocusGained: () -> Unit,
-) {
-    var focused by remember { mutableStateOf(false) }
-    val size by animateDpAsState(if (focused) focusedSize else unfocusedSize)
-    TextButton(
-        onClick = onClick,
-        modifier = Modifier
-            .focusRequester(focusRequester)
-            .onFocusChanged {
-                focused = it.isFocused
-                if (it.isFocused) {
-                    onFocusGained()
-                }
-            }
-            .focusable(),
-    ) {
-        Icon(
-            bitmap = icon,
-            contentDescription = "",
-            tint = Color.Unspecified,
-            modifier = Modifier.size(size),
-        )
     }
 }
 

@@ -38,4 +38,5 @@ android {
 
 dependencies {
     implementJetpackCompose()
+    implementation(project(":ui:library"))
 }
