@@ -29,12 +29,13 @@ import kotlinx.coroutines.launch
 fun GamesList(
     unfocusedSize: Dp,
     focusedSize: Dp,
-    icons: List<AppData>,
+    games: List<AppData>,
     modifier: Modifier,
     onClick: (Int) -> Unit,
+    onSelectedGameChange: (AppData) -> Unit,
 ) {
     var selectedGameIndex by remember { mutableStateOf(0) }
-    val gamesFocusRequesters = Array(icons.size) { FocusRequester() }
+    val gamesFocusRequesters = Array(games.size) { FocusRequester() }
     val scrollState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
     LazyRow(
@@ -48,7 +49,7 @@ fun GamesList(
         verticalAlignment = Alignment.CenterVertically,
         state = scrollState,
     ) {
-        itemsIndexed(icons) { index, app ->
+        itemsIndexed(games) { index, app ->
             val size by animateDpAsState(if (selectedGameIndex == index) focusedSize else unfocusedSize)
             ImageButton(
                 bitmap = app.icon.toBitmap().asImageBitmap(),
@@ -57,9 +58,12 @@ fun GamesList(
                     .focusRequester(gamesFocusRequesters[index])
                     .onFocusChanged {
                         if (it.isFocused) {
-                            selectedGameIndex = index
+                            if (selectedGameIndex != index) {
+                                selectedGameIndex = index
+                                onSelectedGameChange(games[index])
+                            }
                             coroutineScope.launch {
-                                scrollState.safeScrollToItem(icons.size, index - 1)
+                                scrollState.safeScrollToItem(games.size, index - 1)
                             }
                         }
                     }

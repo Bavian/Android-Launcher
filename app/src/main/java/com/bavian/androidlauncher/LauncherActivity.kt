@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -17,6 +18,7 @@ import androidx.compose.runtime.currentRecomposeScope
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -30,6 +32,8 @@ import com.bavian.app_bar.AppBarItemParams
 import com.bavian.games_list.GamesList
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
+private val GAMES_LIST_HEIGHT = 96.dp
+
 class LauncherActivity : ComponentActivity() {
 
     private val launcherViewModel: LauncherViewModel by viewModel()
@@ -40,30 +44,36 @@ class LauncherActivity : ComponentActivity() {
         setContent {
             val gamesList by launcherViewModel.gamesList.collectAsState()
             val appsList by launcherViewModel.appsList.collectAsState()
-            val choseAppState = remember { mutableStateOf(gamesList.firstOrNull()) }
-            Box(modifier = Modifier
-                .fillMaxSize()
+            val gamesStub = gamesList + appsList
+            var selectedGame by remember { mutableStateOf(gamesStub.firstOrNull()) }
+            Box(
+                modifier = Modifier.fillMaxSize()
             ) {
-                val games = gamesList + appsList
                 val gamesFocusRequester = remember { FocusRequester() }
                 GamesList(
                     unfocusedSize = 48.dp,
-                    focusedSize = 96.dp,
-                    icons = games,
+                    focusedSize = GAMES_LIST_HEIGHT,
+                    games = gamesStub,
                     modifier = Modifier
                         .focusRequester(gamesFocusRequester)
-                        .height(96.dp),
+                        .height(GAMES_LIST_HEIGHT),
+                    onSelectedGameChange = {
+                        selectedGame = it
+                    },
                     onClick = {
-                        launcherViewModel.appClicked(this@LauncherActivity, games[it])
+                        launcherViewModel.appClicked(this@LauncherActivity, gamesStub[it])
                     },
                 )
                 LaunchedEffect(currentRecomposeScope) {
                     gamesFocusRequester.requestFocus()
                 }
                 Text(
-                    text = choseAppState.value?.label?.toString() ?: "",
+                    text = selectedGame?.label?.toString() ?: "",
                     textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .align(Alignment.TopCenter)
+                        .padding(0.dp, GAMES_LIST_HEIGHT, 0.dp, 0.dp),
                 )
                 AppBar(
                     apps = appsList.slice(0..3),
