@@ -17,10 +17,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.core.graphics.drawable.toBitmap
 import androidx.core.view.WindowCompat
 import com.bavian.app_bar.AppBar
 import com.bavian.app_bar.AppBarItemParams
@@ -45,7 +43,7 @@ class LauncherActivity : ComponentActivity() {
                 GamesList(
                     unfocusedSize = 48.dp,
                     focusedSize = 96.dp,
-                    icons = games.map { it.icon.toBitmap().asImageBitmap() },
+                    icons = games,
                     onClick = { launcherViewModel.appClicked(this@LauncherActivity, games[it]) },
                 )
                 Text(

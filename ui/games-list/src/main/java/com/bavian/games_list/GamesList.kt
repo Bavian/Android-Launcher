@@ -22,8 +22,10 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.focus.onFocusEvent
-import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.unit.Dp
+import androidx.core.graphics.drawable.toBitmap
+import com.bavian.apps_collector.AppData
 import com.bavian.ui.library.ImageButton
 import kotlinx.coroutines.launch
 
@@ -31,7 +33,7 @@ import kotlinx.coroutines.launch
 fun GamesList(
     unfocusedSize: Dp,
     focusedSize: Dp,
-    icons: List<ImageBitmap>,
+    icons: List<AppData>,
     onClick: (Int) -> Unit,
 ) {
     var selectedGameIndex by remember { mutableStateOf(0) }
@@ -52,10 +54,10 @@ fun GamesList(
         verticalAlignment = Alignment.CenterVertically,
         state = scrollState,
     ) {
-        itemsIndexed(icons) { index, icon ->
+        itemsIndexed(icons) { index, app ->
             val size by animateDpAsState(if (selectedGameIndex == index) focusedSize else unfocusedSize)
             ImageButton(
-                bitmap = icon,
+                bitmap = app.icon.toBitmap().asImageBitmap(),
                 contentDescription = null,
                 modifier = Modifier
                     .focusRequester(gamesFocusRequesters[index])
