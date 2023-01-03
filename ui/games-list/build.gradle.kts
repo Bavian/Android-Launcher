@@ -38,4 +38,6 @@ android {
 
 dependencies {
     implementJetpackCompose()
+    implementation(project(":apps-collector"))
+    implementation(project(":ui:library"))
 }
