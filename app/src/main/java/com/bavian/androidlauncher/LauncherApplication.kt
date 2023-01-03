@@ -2,8 +2,7 @@ package com.bavian.androidlauncher
 
 import android.app.Application
 import android.content.pm.PackageManager
-import com.bavian.androidlauncher.apps.AppsCollector
-import com.bavian.androidlauncher.apps.AppsCollectorImpl
+import com.bavian.apps_collector.appsDataModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.androidx.viewmodel.dsl.viewModelOf
@@ -14,7 +13,6 @@ class LauncherApplication : Application() {
 
     private val appModule = module {
         single<PackageManager> { packageManager }
-        single<AppsCollector> { AppsCollectorImpl(get()) }
         viewModelOf(::LauncherViewModel)
     }
 
@@ -24,7 +22,10 @@ class LauncherApplication : Application() {
         startKoin {
             androidLogger()
             androidContext(this@LauncherApplication)
-            modules(appModule)
+            modules(
+                appModule,
+                appsDataModule,
+            )
         }
     }
 }

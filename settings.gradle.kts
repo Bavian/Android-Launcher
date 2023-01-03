@@ -1,3 +1,6 @@
 rootProject.name = "Android Launcher"
 include(":app")
-include(":games-list")
+include(":apps-collector")
+include(":ui:games-list")
+include(":ui:app-bar")
+include(":ui:library")

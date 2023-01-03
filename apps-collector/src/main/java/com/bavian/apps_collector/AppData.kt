@@ -1,4 +1,4 @@
-package com.bavian.androidlauncher.apps
+package com.bavian.apps_collector
 
 import android.graphics.drawable.Drawable
 
