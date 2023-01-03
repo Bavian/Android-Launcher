@@ -9,6 +9,7 @@ object Deps {
 
         const val CORE_KTX = "androidx.core:core-ktx:" + ProjectVersions.AndroidX.CORE_KTX
         const val LIFECYCLE_RUNTIME_KTX = "androidx.lifecycle:lifecycle-runtime-ktx:" + ProjectVersions.AndroidX.LIFECYCLE_RUNTIME_KTX
+        const val NAVIGATION_COMPOSE = "androidx.navigation:navigation-compose:" + ProjectVersions.AndroidX.NAVIGATION_COMPOSE
 
         object Compose {
             const val ACTIVITY = "androidx.activity:activity-compose:" + ProjectVersions.AndroidX.Compose.ACTIVITY

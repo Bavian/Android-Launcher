@@ -51,6 +51,7 @@ android {
 dependencies {
     implementation(Deps.AndroidX.CORE_KTX)
     implementation(Deps.AndroidX.LIFECYCLE_RUNTIME_KTX)
+    implementation(Deps.AndroidX.NAVIGATION_COMPOSE)
     implementation(Deps.MATERIAL)
     implementation(Deps.KOIN)
     implementJetpackCompose()
