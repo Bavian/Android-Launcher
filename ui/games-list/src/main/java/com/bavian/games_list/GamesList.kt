@@ -1,6 +1,5 @@
 package com.bavian.games_list
 
-import android.util.Log
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.height
@@ -22,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.unit.Dp
 import com.bavian.ui.library.ImageButton
@@ -34,29 +34,34 @@ fun GamesList(
     icons: List<ImageBitmap>,
     onClick: (Int) -> Unit,
 ) {
-    val focusRequesters = Array(icons.size) { FocusRequester() }
+    var selectedGameIndex by remember { mutableStateOf(0) }
+    val selfFocusRequester = FocusRequester()
+    val gamesFocusRequesters = Array(icons.size) { FocusRequester() }
     val scrollState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
     LazyRow(
         modifier = Modifier
-            .height(focusedSize)
+            .height(focusedSize).onFocusEvent {  }
+            .focusRequester(selfFocusRequester)
             .onFocusChanged {
-                Log.d("bavavian", "onFocusChanged: $it")
-            },
+                if (it.isFocused) {
+                    gamesFocusRequesters[selectedGameIndex].requestFocus()
+                }
+            }
+            .focusable(),
         verticalAlignment = Alignment.CenterVertically,
         state = scrollState,
     ) {
         itemsIndexed(icons) { index, icon ->
-            var focused by remember { mutableStateOf(false) }
-            val size by animateDpAsState(if (focused) focusedSize else unfocusedSize)
+            val size by animateDpAsState(if (selectedGameIndex == index) focusedSize else unfocusedSize)
             ImageButton(
                 bitmap = icon,
                 contentDescription = null,
                 modifier = Modifier
-                    .focusRequester(focusRequesters[index])
+                    .focusRequester(gamesFocusRequesters[index])
                     .onFocusChanged {
-                        focused = it.isFocused
-                        if (focused) {
+                        if (it.isFocused) {
+                            selectedGameIndex = index
                             coroutineScope.launch {
                                 scrollState.safeScrollToItem(icons.size, index - 1)
                             }
@@ -69,7 +74,7 @@ fun GamesList(
         }
     }
     LaunchedEffect(currentRecomposeScope) {
-        focusRequesters[0].requestFocus()
+        selfFocusRequester.requestFocus()
     }
 }
 
