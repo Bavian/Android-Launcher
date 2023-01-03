@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.bavian.app_bar"
+    namespace = "com.bavian.ui.library"
     compileSdk = ProjectVersions.Sdk.COMPILE_SDK
 
     defaultConfig {
@@ -37,8 +37,5 @@ android {
 }
 
 dependencies {
-    implementation(Deps.MATERIAL)
     implementJetpackCompose()
-    implementation(project(":apps-collector"))
-    implementation(project(":ui:library"))
 }

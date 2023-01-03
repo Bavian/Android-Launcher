@@ -7,7 +7,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -55,7 +54,7 @@ class LauncherActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxWidth(),
                 )
                 AppBar(
-                    apps = appsList.slice(0..3).map { it.icon.toBitmap().asImageBitmap() },
+                    apps = appsList.slice(0..3),
                     appsParams = AppBarItemParams(
                         size = 48.dp,
                         focusedColor = MaterialTheme.colorScheme.primary,
@@ -66,7 +65,6 @@ class LauncherActivity : ComponentActivity() {
                             shape = RoundedCornerShape(35),
                         )
                         .clip(RoundedCornerShape(35))
-                        .height(60.dp)
                 )
             }
         }
