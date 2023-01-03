@@ -1,4 +1,4 @@
-package com.bavian.androidlauncher.apps
+package com.bavian.apps_collector
 
 interface AppsCollector {
     fun collectGames(): List<AppData>

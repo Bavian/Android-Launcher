@@ -4,15 +4,15 @@ import android.app.Activity
 import android.content.pm.PackageManager
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.bavian.androidlauncher.apps.AppData
-import com.bavian.androidlauncher.apps.AppsCollector
+import com.bavian.apps_collector.AppData
+import com.bavian.apps_collector.AppsCollector
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class LauncherViewModel(
     private val packageManager: PackageManager,
-    private val appsCollector: AppsCollector
+    private val appsCollector: AppsCollector,
 ) : ViewModel() {
 
     private val _gamesList = MutableStateFlow(emptyList<AppData>())

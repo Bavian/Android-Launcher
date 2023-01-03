@@ -1,4 +1,4 @@
-package com.bavian.androidlauncher.apps
+package com.bavian.apps_collector
 
 import android.content.Intent
 import android.content.pm.ApplicationInfo
@@ -41,6 +41,7 @@ private fun PackageManager.queryIntentActivitiesCompat(intent: Intent): List<Res
 private fun PackageManager.isNotGame(resolveInfo: ResolveInfo) = !isGame(resolveInfo)
 
 // Not all games use flag or category
+@Suppress("DEPRECATION")
 private fun PackageManager.isGame(resolveInfo: ResolveInfo): Boolean {
     val applicationInfo = getApplicationInfoCompat(resolveInfo.activityInfo.packageName)
     return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
@@ -50,6 +51,7 @@ private fun PackageManager.isGame(resolveInfo: ResolveInfo): Boolean {
     }
 }
 
+@Suppress("DEPRECATION")
 private fun PackageManager.getApplicationInfoCompat(packageName: String, flag: Int = 0): ApplicationInfo {
     return  if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) {
         getApplicationInfo(packageName, flag)

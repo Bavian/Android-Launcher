@@ -55,6 +55,7 @@ dependencies {
     implementation(Deps.KOIN)
     implementJetpackCompose()
 
+    implementation(project(":apps-collector"))
     implementation(project(":ui:games-list"))
     implementation(project(":ui:app-bar"))
 }
