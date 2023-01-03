@@ -31,5 +31,5 @@ android {
 }
 
 dependencies {
-
+    implementation(Deps.KOIN)
 }
