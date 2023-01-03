@@ -2,15 +2,12 @@ package com.bavian.games_list
 
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.focusable
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.currentRecomposeScope
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -21,7 +18,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.unit.Dp
 import androidx.core.graphics.drawable.toBitmap
@@ -34,17 +30,15 @@ fun GamesList(
     unfocusedSize: Dp,
     focusedSize: Dp,
     icons: List<AppData>,
+    modifier: Modifier,
     onClick: (Int) -> Unit,
 ) {
     var selectedGameIndex by remember { mutableStateOf(0) }
-    val selfFocusRequester = FocusRequester()
     val gamesFocusRequesters = Array(icons.size) { FocusRequester() }
     val scrollState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
     LazyRow(
-        modifier = Modifier
-            .height(focusedSize).onFocusEvent {  }
-            .focusRequester(selfFocusRequester)
+        modifier = modifier
             .onFocusChanged {
                 if (it.isFocused) {
                     gamesFocusRequesters[selectedGameIndex].requestFocus()
@@ -74,9 +68,6 @@ fun GamesList(
                 onClick = { onClick(index) },
             )
         }
-    }
-    LaunchedEffect(currentRecomposeScope) {
-        selfFocusRequester.requestFocus()
     }
 }
 

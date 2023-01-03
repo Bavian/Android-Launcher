@@ -7,16 +7,21 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.currentRecomposeScope
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
@@ -40,12 +45,21 @@ class LauncherActivity : ComponentActivity() {
                 .fillMaxSize()
             ) {
                 val games = gamesList + appsList
+                val gamesFocusRequester = remember { FocusRequester() }
                 GamesList(
                     unfocusedSize = 48.dp,
                     focusedSize = 96.dp,
                     icons = games,
-                    onClick = { launcherViewModel.appClicked(this@LauncherActivity, games[it]) },
+                    modifier = Modifier
+                        .focusRequester(gamesFocusRequester)
+                        .height(96.dp),
+                    onClick = {
+                        launcherViewModel.appClicked(this@LauncherActivity, games[it])
+                    },
                 )
+                LaunchedEffect(currentRecomposeScope) {
+                    gamesFocusRequester.requestFocus()
+                }
                 Text(
                     text = choseAppState.value?.label?.toString() ?: "",
                     textAlign = TextAlign.Center,
