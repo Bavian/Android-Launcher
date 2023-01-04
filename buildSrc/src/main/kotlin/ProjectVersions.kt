@@ -19,8 +19,10 @@ object ProjectVersions {
     }
 
     object AndroidX {
+
         const val CORE_KTX = "1.9.0"
         const val LIFECYCLE_RUNTIME_KTX = "2.5.1"
+        const val NAVIGATION_COMPOSE = "2.5.3"
 
         object Compose {
             const val COMPOSE = "1.3.2"
