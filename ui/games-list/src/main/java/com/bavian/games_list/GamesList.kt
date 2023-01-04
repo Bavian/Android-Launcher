@@ -6,7 +6,9 @@ import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.focusable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -15,18 +17,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyEvent
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onKeyEvent
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.toSize
 import androidx.core.graphics.drawable.toBitmap
 import com.bavian.apps_collector.AppData
 import kotlinx.coroutines.launch
@@ -44,6 +51,7 @@ fun GamesList(
     var selectedGameIndex by rememberSaveable { mutableStateOf(0) }
     val scrollState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
+    var parentContainerSize by remember { mutableStateOf(Size.Zero) }
     LazyRow(
         modifier = modifier
             .focusable()
@@ -62,10 +70,16 @@ fun GamesList(
             }
             .clickable(
                 onClick = { onClick(selectedGameIndex) },
-            ),
+            )
+            .onGloballyPositioned {
+                parentContainerSize = it.parentCoordinates?.size?.toSize() ?: Size.Zero
+            },
         verticalAlignment = Alignment.CenterVertically,
         state = scrollState,
     ) {
+        item {
+            Box(modifier = Modifier.size(unfocusedSize))
+        }
         itemsIndexed(games) { index, app ->
             val size by animateDpAsState(if (selectedGameIndex == index) focusedSize else unfocusedSize)
             Image(
@@ -74,10 +88,13 @@ fun GamesList(
                 modifier = Modifier.size(size),
             )
         }
+        item {
+            Box(modifier = Modifier.width(parentContainerSize.width.dp))
+        }
     }
     LaunchedEffect(selectedGameIndex) {
         coroutineScope.launch {
-            scrollState.safeScrollToItem(games.size, selectedGameIndex - 1)
+            scrollState.safeScrollToItem(games.size, selectedGameIndex)
         }
         onSelectedGameChange(games[selectedGameIndex])
     }
