@@ -14,7 +14,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.currentRecomposeScope
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -73,7 +72,7 @@ class LauncherActivity : ComponentActivity() {
                                 launcherViewModel.appClicked(this@LauncherActivity, gamesStub[it])
                             },
                         )
-                        LaunchedEffect(currentRecomposeScope) {
+                        LaunchedEffect(Unit) {
                             gamesFocusRequester.requestFocus()
                         }
                         Text(
@@ -97,6 +96,7 @@ class LauncherActivity : ComponentActivity() {
                                     shape = RoundedCornerShape(35),
                                 )
                                 .clip(RoundedCornerShape(35)),
+                            onAppClick = { launcherViewModel.appClicked(this@LauncherActivity, it) },
                             onOtherClick = { navController.navigate(DESTINATION_ALL_APPS) }
                         )
                     }

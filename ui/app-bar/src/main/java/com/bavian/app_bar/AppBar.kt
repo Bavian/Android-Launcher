@@ -26,12 +26,19 @@ fun AppBar(
     apps: List<AppData>,
     appsParams: AppBarItemParams,
     modifier: Modifier,
+    onAppClick: (AppData) -> Unit,
     onOtherClick: () -> Unit,
 ) = Row(
     verticalAlignment = Alignment.CenterVertically,
     modifier = modifier
 ) {
-    apps.forEach { AppBarItem(app = it, appsParams = appsParams) }
+    apps.forEach {
+        AppBarItem(
+            app = it,
+            appsParams = appsParams,
+            onClick = onAppClick,
+        )
+    }
     OthersItem(appsParams, onOtherClick)
 }
 
@@ -39,6 +46,7 @@ fun AppBar(
 private fun AppBarItem(
     app: AppData,
     appsParams: AppBarItemParams,
+    onClick: (AppData) -> Unit,
 ) {
     var focused by remember { mutableStateOf(false) }
     val color by animateColorAsState(if (focused) appsParams.focusedColor else Color.Transparent)
@@ -50,7 +58,7 @@ private fun AppBarItem(
             .onFocusChanged { focused = it.isFocused }
             .focusable()
             .size(appsParams.size),
-        onClick = { }
+        onClick = { onClick(app) },
     )
 }
 
