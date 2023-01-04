@@ -2,7 +2,6 @@
 
 package com.bavian.games_list
 
-import android.view.KeyEvent as NativeKeyEvent
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -16,8 +15,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -31,6 +30,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.core.graphics.drawable.toBitmap
 import com.bavian.apps_collector.AppData
 import kotlinx.coroutines.launch
+import android.view.KeyEvent as NativeKeyEvent
 
 @Composable
 fun GamesList(
@@ -41,7 +41,7 @@ fun GamesList(
     onClick: (Int) -> Unit,
     onSelectedGameChange: (AppData) -> Unit,
 ) {
-    var selectedGameIndex by remember { mutableStateOf(0) }
+    var selectedGameIndex by rememberSaveable { mutableStateOf(0) }
     val scrollState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
     LazyRow(
